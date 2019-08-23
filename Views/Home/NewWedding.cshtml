@@ -1,0 +1,23 @@
+<div class="text-center">
+    <h5><a href="/logout">Log Out</a></h5>
+    <h2>Add a Wedding </h2>
+@model Wedding
+
+<div class="align-left">
+    <form asp-action="AddWedding" controller="Home" method="POST">
+        <label for="Bride">Bride</label><br>
+        <span asp-validation-for="Bride" class="error"></span>
+        <input class="form-control" type="text" name="Bride">
+        <label for="Groom">Groom</label><br>
+        <span asp-validation-for="Groom" class="error"></span>
+        <input class="form-control" type="text" name="Groom">
+        <label for="Date">Wedding Date</label><br>
+        <span asp-validation-for="Date" class="error"></span>
+        <input class="form-control" type="date" name="Date">
+        <label for="Address">Wedding Address</label><br>
+        <span asp-validation-for="Address" class="error"></span>
+        <input class="form-control" type="text"name="Address"><br>
+        <button class="btn btn-primary">Add Wedding</button>
+    </form>
+    </div>
+</div>

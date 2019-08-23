@@ -1,0 +1,44 @@
+@model List<Wedding>
+<h2>Welcome to the wedding planner, @ViewBag.FirstName</h2>
+<a class="logout" asp-action="Logout">Logout</a>
+
+<table class="table table-striped">
+    <thead class="thead thead-dark">
+        <tr>
+            <th>Wedding</th>
+            <th>Date</th>
+            <th>Guests</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+            <p>@ViewBag.FirstName</p>
+            <p>@ViewBag.Logged_in_user_id</p>
+
+        @foreach(var wedding in @Model)
+        {
+            <tr>
+                <td><a asp-action="show" asp-route-WeddingId="@wedding.WeddingId">@wedding.Groom & @wedding.Bride</a></td>
+                <td>@wedding.Date.ToString("MMMM dd, yyyy")</td>
+                
+                <td>@wedding.RSVPs.Count</td>
+
+                <td>
+                @if(wedding.Creator.GuestId == ViewBag.Logged_in_user_id)
+                {
+                    <a asp-route="remove/{WeddingId}" asp-route-WeddingId="@wedding.WeddingId">Delete</a>
+
+                }else if(wedding.RSVPs.FirstOrDefault(r => r.GuestId == ViewBag.Logged_in_user_id)!=null)
+                {
+                    <a asp-route="remove/{WeddingId}" asp-route-WeddingId="@wedding.WeddingId">Cancel</a>
+                }else
+                {
+                    <a asp-action="RSVP" asp-route-WeddingId="@wedding.WeddingId">RSVP</a>
+                }
+
+                </td>
+                </tr>
+        }
+    </tbody>
+</table>
+<a asp-action="NewWedding"><button>New Wedding</button></a>
