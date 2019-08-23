@@ -12,8 +12,6 @@
         </tr>
     </thead>
     <tbody>
-            <p>@ViewBag.FirstName</p>
-            <p>@ViewBag.Logged_in_user_id</p>
 
         @foreach(var wedding in @Model)
         {
@@ -26,18 +24,18 @@
                 <td>
                 @if(wedding.Creator.GuestId == ViewBag.Logged_in_user_id)
                 {
-                    <a asp-route="remove/{WeddingId}" asp-route-WeddingId="@wedding.WeddingId">Delete</a>
+                    <a asp-action="removeWedding" asp-route-WeddingId="@wedding.WeddingId">Delete</a>
 
                 }else if(wedding.RSVPs.FirstOrDefault(r => r.GuestId == ViewBag.Logged_in_user_id)!=null)
                 {
-                    <a asp-route="remove/{WeddingId}" asp-route-WeddingId="@wedding.WeddingId">Cancel</a>
+                    <a asp-action="removeRSVP" asp-route-WeddingId="@wedding.WeddingId">Cancel</a>
                 }else
                 {
                     <a asp-action="RSVP" asp-route-WeddingId="@wedding.WeddingId">RSVP</a>
                 }
 
                 </td>
-                </tr>
+            </tr>
         }
     </tbody>
 </table>

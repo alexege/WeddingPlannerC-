@@ -52,6 +52,12 @@ namespace WeddingPlanner.Controllers
         [HttpGet("Dashboard")]
         public IActionResult Dashboard()
         {
+            // checked to see if user is in session or not. If not, redirec to index.
+            if(HttpContext.Session.GetInt32("GuestId") == null){
+                return View("Index");
+            }
+
+
             int? GuestId = HttpContext.Session.GetInt32("GuestId");
             if(GuestId == null)
             {
@@ -124,17 +130,33 @@ namespace WeddingPlanner.Controllers
             return RedirectToAction("Dashboard");
         }
 
-        [HttpGet("wedding/rsvp/{WeddingId}")]
-        public IActionResult RSVP()
+        [HttpGet("rsvp/add/{WeddingId}")]
+        public IActionResult RSVP(int WeddingId)
         {
-            return RedirectToAction("Dashboard");
+           RSVP rsvp = new RSVP(WeddingId, (int)HttpContext.Session.GetInt32("GuestId"));
+           var guest = dbContext.Weddings.FirstOrDefault(wed => wed.WeddingId == rsvp.WeddingId);
+           dbContext.RSVPs.Add(rsvp);
+           dbContext.SaveChanges();
+           guest.RSVPs.Add(dbContext.RSVPs.Last());
+           dbContext.SaveChanges();
+           return RedirectToAction("Dashboard");
+        }
+        
+        [HttpGet("rsvp/remove/{WeddingId}")]
+        public IActionResult removeRSVP(int WeddingId)
+        {
+           var wedRSVP = dbContext.RSVPs.Where(r => r.WeddingId == WeddingId).ToList();
+           var remove = wedRSVP.FirstOrDefault(r => r.GuestId == HttpContext.Session.GetInt32("GuestId"));
+           dbContext.RSVPs.Remove(remove);
+           dbContext.SaveChanges();
+           return RedirectToAction("Dashboard");
         }
 
         [HttpGet("Logout")]
         public IActionResult Logout()
         {
             //Destroy Session
-
+            HttpContext.Session.Clear();
             return RedirectToAction("Index");
         }
 
